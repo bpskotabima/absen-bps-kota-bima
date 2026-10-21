@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Absensi Wajah</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main>
+  <div class="bar">
+    <div><h1>Absensi Karyawan</h1>
+    <p class="redup">Absen satu kali saja pukul 12.00 sampai 13.00. Lewat 13.00 wajib mengisi alasan.</p>
+    <nav><a href="{{ url_for('admin') }}">Admin</a></nav>
+  </div>
+
+  <div class="kartu">
+    <div class="jam" id="jam">--:--:--</div>
+    <div class="kamera"><video id="video" muted playsinline></video></div>
+    <button id="btnAbsen" disabled>Memuat kamera…</button>
+    <div id="status" class="status" role="status">Memuat model wajah…</div>
+
+    <div id="kotakAlasan" class="sembunyi">
+      <label for="alasan">Alasan terlambat</label>
+      <textarea id="alasan" placeholder="Contoh: macet, ada keperluan keluarga"></textarea>
+      <p><button id="btnKirimAlasan">Kirim alasan dan absen</button></p>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/dist/face-api.js"></script>
+<script src="{{ url_for('static', filename='face.js') }}"></script>
+<script>
+const video = document.getElementById("video");
+const btn = document.getElementById("btnAbsen");
+const status = document.getElementById("status");
+const kotakAlasan = document.getElementById("kotakAlasan");
+const alasan = document.getElementById("alasan");
+let descTertahan = null;
+
+setInterval(() => {
+  document.getElementById("jam").textContent = new Date().toLocaleTimeString("id-ID", {hour12:false});
+}, 1000);
+
+(async () => {
+  try {
+    await muatModel();
+    await nyalakanKamera(video);
+    btn.disabled = false; btn.textContent = "Absen sekarang";
+    tampilStatus(status, "Hadapkan wajah ke kamera, lalu tekan Absen sekarang.");
+  } catch (e) {
+    tampilStatus(status, "Kamera/model gagal dimuat. Pakai HTTPS atau localhost dan izinkan kamera.", "galat");
+  }
+})();
+
+async function proses(desc, teksAlasan) {
+  const res = await kirimJSON("/api/absen", { descriptor: desc, alasan: teksAlasan || "" });
+  if (res.status === "ok") {
+    kotakAlasan.classList.add("sembunyi"); alasan.value = ""; descTertahan = null;
+    tampilStatus(status, `${res.pesan} Pukul ${res.waktu}.` + (res.terlambat ? " (Terlambat, alasan tersimpan.)" : ""),
+                 res.terlambat ? "peringatan" : "ok");
+  } else if (res.status === "butuh_alasan") {
+    descTertahan = desc;
+    kotakAlasan.classList.remove("sembunyi"); alasan.focus();
+    tampilStatus(status, res.pesan, "peringatan");
+  } else {
+    tampilStatus(status, res.pesan || "Terjadi kesalahan.", "galat");
+  }
+}
+
+btn.addEventListener("click", async () => {
+  btn.disabled = true;
+  tampilStatus(status, "Memindai wajah…");
+  const desc = await ambilDescriptor(video);
+  if (!desc) { tampilStatus(status, "Wajah tidak terdeteksi. Perbaiki pencahayaan dan coba lagi.", "galat"); btn.disabled = false; return; }
+  await proses(desc);
+  btn.disabled = false;
+});
+
+document.getElementById("btnKirimAlasan").addEventListener("click", async () => {
+  if (!alasan.value.trim()) { tampilStatus(status, "Alasan wajib diisi.", "galat"); return; }
+  await proses(descTertahan, alasan.value.trim());
+});
+</script>
+</body>
+</html>

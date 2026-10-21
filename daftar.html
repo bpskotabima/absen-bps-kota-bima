@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daftarkan Karyawan</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main>
+  <div class="bar"><h1>Daftarkan karyawan</h1>
+    <nav><a href="{{ url_for('admin') }}">Kembali ke admin</a></nav></div>
+  <div class="kartu">
+    <label for="nip">NIP</label><input id="nip" autocomplete="off">
+    <label for="nama">Nama lengkap</label><input id="nama" autocomplete="off">
+    <div class="kamera"><video id="video" muted playsinline></video></div>
+    <button id="btnSimpan" disabled>Memuat kamera…</button>
+    <div id="status" class="status" role="status">Memuat model wajah…</div>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.13/dist/face-api.js"></script>
+<script src="{{ url_for('static', filename='face.js') }}"></script>
+<script>
+const video = document.getElementById("video");
+const btn = document.getElementById("btnSimpan");
+const status = document.getElementById("status");
+
+(async () => {
+  try {
+    await muatModel(); await nyalakanKamera(video);
+    btn.disabled = false; btn.textContent = "Ambil wajah dan simpan";
+    tampilStatus(status, "Isi NIP dan nama, hadapkan wajah ke kamera, lalu simpan.");
+  } catch (e) {
+    tampilStatus(status, "Kamera/model gagal dimuat. Pakai HTTPS atau localhost dan izinkan kamera.", "galat");
+  }
+})();
+
+btn.addEventListener("click", async () => {
+  const nip = document.getElementById("nip").value.trim();
+  const nama = document.getElementById("nama").value.trim();
+  if (!nip || !nama) { tampilStatus(status, "NIP dan nama wajib diisi.", "galat"); return; }
+  btn.disabled = true; tampilStatus(status, "Memindai wajah…");
+  const desc = await ambilDescriptor(video);
+  if (!desc) { tampilStatus(status, "Wajah tidak terdeteksi. Coba lagi.", "galat"); btn.disabled = false; return; }
+  const res = await kirimJSON("/api/daftar", { nip, nama, descriptor: desc });
+  const berhasil = res.pesan && res.pesan.includes("berhasil");
+  tampilStatus(status, res.pesan, berhasil ? "ok" : "galat");
+  if (berhasil) { document.getElementById("nip").value = ""; document.getElementById("nama").value = ""; }
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>

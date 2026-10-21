@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Absensi</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main class="lebar">
+  <div class="bar"><h1>Admin absensi</h1>
+    <nav><a href="{{ url_for('halaman_absen') }}">Halaman absen</a>
+      <a href="{{ url_for('halaman_daftar') }}">Daftarkan karyawan</a>
+      <a href="{{ url_for('logout') }}">Keluar</a></nav></div>
+
+  <h2>Rekap absensi</h2>
+  <form method="get" class="bar" style="justify-content:flex-start">
+    <input type="date" name="tanggal" value="{{ tanggal }}" style="width:auto">
+    <button type="submit" class="sekunder">Tampilkan</button>
+  </form>
+  <div class="gulir" style="margin-top:12px">
+  <table class="tabel">
+    <tr><th>Nama</th><th>NIP</th><th>Jenis</th><th>Waktu</th><th>Alasan terlambat</th></tr>
+    {% for r in rekap %}
+    <tr>
+      <td>{{ r.nama }}</td><td>{{ r.nip }}</td><td>{{ label[r.jenis] }}</td>
+      <td class="{{ 'telat' if r.terlambat }}">{{ r.waktu }}{% if r.terlambat %} (terlambat){% endif %}</td>
+      <td>{{ r.alasan or '' }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">Belum ada absensi pada tanggal ini.</td></tr>
+    {% endfor %}
+  </table></div>
+
+  <h2>Karyawan terdaftar</h2>
+  <div class="gulir">
+  <table class="tabel">
+    <tr><th>NIP</th><th>Nama</th><th>Terdaftar</th><th></th></tr>
+    {% for k in karyawan %}
+    <tr><td>{{ k.nip }}</td><td>{{ k.nama }}</td><td>{{ k.dibuat }}</td>
+      <td><form method="post" action="{{ url_for('hapus_karyawan', kid=k.id) }}"
+                onsubmit="return confirm('Hapus {{ k.nama }} beserta riwayat absennya?')">
+        <button class="hapus">Hapus</button></form></td></tr>
+    {% else %}
+    <tr><td colspan="4">Belum ada karyawan. Mulai dari “Daftarkan karyawan”.</td></tr>
+    {% endfor %}
+  </table></div>
+</main>
+</body>
+</html>

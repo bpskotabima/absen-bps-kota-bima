@@ -1,0 +1,259 @@
+/* =========================================================
+   Absensi — tema modern & simpel
+   Ganti warna utama cukup di bagian :root (lihat PALET ALTERNATIF)
+   ========================================================= */
+:root{
+  --bg:#f5f7fb;
+  --kartu:#ffffff;
+  --teks:#0f172a;
+  --redup:#64748b;
+  --garis:#e2e8f0;
+  --baris-selang:#f8fafc;
+
+  --utama:#4f46e5;
+  --utama-gelap:#4338ca;
+  --utama-muda:#eef2ff;
+
+  --ok:#15803d;        --ok-muda:#f0fdf4;
+  --bahaya:#dc2626;    --bahaya-muda:#fef2f2;
+  --peringatan:#b45309;--peringatan-muda:#fffbeb;
+
+  --radius:14px;
+  --bayang:0 1px 2px rgba(15,23,42,.05),0 8px 24px rgba(15,23,42,.06);
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+
+/* ---- PALET ALTERNATIF (hapus tanda komentar salah satu) ----
+   Teal  : :root{--utama:#0d9488;--utama-gelap:#0f766e;--utama-muda:#f0fdfa}
+   Biru  : :root{--utama:#2563eb;--utama-gelap:#1d4ed8;--utama-muda:#eff6ff}
+   Hijau : :root{--utama:#059669;--utama-gelap:#047857;--utama-muda:#ecfdf5}
+*/
+
+/* ---- Mode gelap otomatis ---- */
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0b1220;
+    --kartu:#131c2e;
+    --teks:#e5e9f0;
+    --redup:#94a3b8;
+    --garis:#243049;
+    --baris-selang:#162036;
+
+    --utama:#818cf8;
+    --utama-gelap:#6366f1;
+    --utama-muda:#1e2547;
+
+    --ok:#4ade80;        --ok-muda:#0f2a1d;
+    --bahaya:#f87171;    --bahaya-muda:#2d1517;
+    --peringatan:#fbbf24;--peringatan-muda:#2b2110;
+
+    --bayang:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:var(--font);
+  background:
+    radial-gradient(900px 400px at 50% -120px,var(--utama-muda),transparent 70%),
+    var(--bg);
+  background-repeat:no-repeat;
+  color:var(--teks);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+main{max-width:720px;margin:0 auto;padding:28px 16px 56px}
+main.lebar{max-width:1000px}
+
+h1{font-size:1.6rem;font-weight:700;letter-spacing:-.02em;margin:0 0 4px}
+h2{font-size:1.1rem;font-weight:650;letter-spacing:-.01em;margin:32px 0 10px}
+.redup{color:var(--redup);margin:0 0 18px}
+
+/* ---- Kartu ---- */
+.kartu{
+  background:var(--kartu);
+  border:1px solid var(--garis);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:var(--bayang);
+}
+
+/* ---- Jam ---- */
+.jam{
+  font-size:2.8rem;font-weight:800;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;
+  background:linear-gradient(90deg,var(--utama),var(--utama-gelap));
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+
+/* ---- Kamera ---- */
+.kamera{
+  position:relative;width:100%;max-width:480px;aspect-ratio:4/3;
+  background:#000;border-radius:20px;overflow:hidden;margin:14px 0;
+  box-shadow:0 0 0 4px var(--utama-muda),0 0 0 5px var(--utama),var(--bayang);
+}
+.kamera video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+
+/* ---- Tombol ---- */
+button,.tombol{
+  font:inherit;font-weight:600;
+  background:var(--utama);color:#fff;
+  border:1px solid transparent;border-radius:999px;
+  padding:10px 20px;cursor:pointer;text-decoration:none;display:inline-block;
+  box-shadow:0 1px 2px rgba(0,0,0,.12);
+  transition:background .15s,transform .15s,box-shadow .15s;
+}
+button:hover,.tombol:hover{
+  background:var(--utama-gelap);transform:translateY(-1px);
+  box-shadow:0 6px 14px rgba(79,70,229,.25);
+}
+button:active,.tombol:active{transform:translateY(0)}
+button:disabled{opacity:.5;cursor:wait;transform:none;box-shadow:none}
+button.sekunder{
+  background:var(--kartu);color:var(--teks);border-color:var(--garis);box-shadow:none;
+}
+button.sekunder:hover{background:var(--baris-selang);box-shadow:none}
+button.hapus{
+  background:transparent;color:var(--bahaya);border-color:var(--bahaya);
+  padding:4px 14px;font-weight:500;box-shadow:none;
+}
+button.hapus:hover{background:var(--bahaya-muda);box-shadow:none}
+
+/* ---- Form ---- */
+label{display:block;margin:14px 0 6px;font-weight:600;font-size:.92rem}
+input,textarea{
+  font:inherit;width:100%;max-width:480px;
+  padding:10px 12px;color:var(--teks);background:var(--kartu);
+  border:1px solid var(--garis);border-radius:10px;
+  transition:border-color .15s,box-shadow .15s;
+}
+input:focus,textarea:focus{
+  outline:none;border-color:var(--utama);
+  box-shadow:0 0 0 4px var(--utama-muda);
+}
+textarea{min-height:90px;resize:vertical}
+
+/* ---- Status ---- */
+.status{
+  margin:14px 0;padding:12px 14px;border-radius:12px;
+  border:1px solid var(--garis);border-left-width:4px;
+  background:var(--kartu);
+}
+.status.ok{border-color:var(--ok);background:var(--ok-muda);color:var(--ok)}
+.status.galat{border-color:var(--bahaya);background:var(--bahaya-muda);color:var(--bahaya)}
+.status.peringatan{border-color:var(--peringatan);background:var(--peringatan-muda);color:var(--peringatan)}
+
+/* ---- Bar atas / navigasi ---- */
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.bar nav{display:flex;gap:6px;flex-wrap:wrap}
+.bar nav a{
+  margin:0;padding:6px 14px;border-radius:999px;
+  color:var(--redup);text-decoration:none;font-weight:500;font-size:.92rem;
+  transition:background .15s,color .15s;
+}
+.bar nav a:hover{background:var(--utama-muda);color:var(--utama)}
+
+/* ---- Tabel ---- */
+.gulir{overflow-x:auto;border-radius:var(--radius)}
+.tabel{
+  width:100%;background:var(--kartu);
+  border:1px solid var(--garis);border-radius:var(--radius);
+  border-collapse:separate;border-spacing:0;overflow:hidden;
+  box-shadow:var(--bayang);font-size:.93rem;
+}
+.tabel th,.tabel td{
+  padding:11px 14px;border-bottom:1px solid var(--garis);
+  text-align:left;vertical-align:top;
+}
+.tabel th{
+  background:var(--baris-selang);color:var(--redup);
+  font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  white-space:nowrap;
+}
+.tabel tr:last-child td{border-bottom:0}
+.tabel tr:nth-child(even) td{background:var(--baris-selang)}
+.tabel tr:hover td{background:var(--utama-muda)}
+.telat{color:var(--bahaya);font-weight:600}
+
+.sembunyi{display:none}
+
+:focus-visible{outline:3px solid var(--utama);outline-offset:2px}
+
+/* ---- Layar kecil ---- */
+@media (max-width:520px){
+  main{padding:20px 12px 40px}
+  .jam{font-size:2.2rem}
+  .kartu{padding:16px}
+  .tabel th,.tabel td{padding:9px 10px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important}
+}
+
+/* =====================================================================
+   [TAMBAHAN] Efek untuk wajah.js: pemindai kamera, status beranimasi,
+   tombol loading. Tidak mengubah aturan di atas.
+   ===================================================================== */
+
+/* ---- Bingkai pemindai di kamera ---- */
+.kamera{transition:box-shadow .35s}
+.pindai{position:absolute;inset:0;pointer-events:none}
+.sudut{
+  position:absolute;width:36px;height:36px;
+  border:3px solid rgba(255,255,255,.9);
+  transition:border-color .3s,transform .3s;
+}
+.sudut.kiri-atas{top:14px;left:14px;border-right:0;border-bottom:0;border-top-left-radius:14px}
+.sudut.kanan-atas{top:14px;right:14px;border-left:0;border-bottom:0;border-top-right-radius:14px}
+.sudut.kiri-bawah{bottom:14px;left:14px;border-right:0;border-top:0;border-bottom-left-radius:14px}
+.sudut.kanan-bawah{bottom:14px;right:14px;border-left:0;border-top:0;border-bottom-right-radius:14px}
+
+.garis-pindai{
+  position:absolute;left:10%;right:10%;top:8%;height:3px;border-radius:3px;
+  background:linear-gradient(90deg,transparent,#a5b4fc,transparent);
+  box-shadow:0 0 16px 2px rgba(129,140,248,.8);
+  opacity:0;
+}
+.kamera.aktif .garis-pindai{opacity:1;animation:pindai 2.6s ease-in-out infinite}
+.kamera.aktif .sudut{border-color:#a5b4fc}
+@keyframes pindai{0%,100%{top:8%}50%{top:90%}}
+
+/* ---- Kamera berkedip sesuai hasil ---- */
+.kamera.ok{box-shadow:0 0 0 4px rgba(34,197,94,.25),0 0 0 5px #22c55e,0 8px 30px rgba(34,197,94,.35)}
+.kamera.galat{box-shadow:0 0 0 4px rgba(239,68,68,.25),0 0 0 5px #ef4444,0 8px 30px rgba(239,68,68,.35)}
+.kamera.peringatan{box-shadow:0 0 0 4px rgba(245,158,11,.25),0 0 0 5px #f59e0b,0 8px 30px rgba(245,158,11,.35)}
+.kamera.ok .sudut{border-color:#22c55e}
+.kamera.galat .sudut{border-color:#ef4444}
+.kamera.peringatan .sudut{border-color:#f59e0b}
+.kamera.ok .garis-pindai,.kamera.galat .garis-pindai,.kamera.peringatan .garis-pindai{opacity:0}
+
+/* ---- Ikon & animasi pada kotak status ---- */
+.status.ok::before,.status.galat::before,.status.peringatan::before{
+  display:inline-grid;place-items:center;
+  width:1.4em;height:1.4em;margin-right:.6em;border-radius:50%;
+  color:var(--kartu);font-size:.8em;font-weight:800;vertical-align:.05em;
+}
+.status.ok::before{content:"✓";background:var(--ok)}
+.status.galat::before{content:"✕";background:var(--bahaya)}
+.status.peringatan::before{content:"!";background:var(--peringatan)}
+.status.muncul{animation:muncul .4s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes muncul{
+  from{opacity:0;transform:translateY(10px) scale(.97)}
+  to{opacity:1;transform:none}
+}
+
+/* ---- Tombol saat diproses (disabled) tampil spinner ---- */
+button:disabled::after{
+  content:"";display:inline-block;width:.9em;height:.9em;margin-left:.6em;
+  border:2px solid currentColor;border-right-color:transparent;border-radius:50%;
+  vertical-align:-.12em;animation:putar .7s linear infinite;
+}
+@keyframes putar{to{transform:rotate(360deg)}}
+
+@media (prefers-reduced-motion:reduce){
+  .kamera.aktif .garis-pindai,.status.muncul,button:disabled::after{animation:none!important}
+}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Masuk Admin</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main>
+  <h1>Masuk admin</h1>
+  <p class="redup">Khusus untuk mendaftarkan karyawan dan melihat rekap absensi.</p>
+  <form method="post" class="kartu">
+    {% if galat %}<div class="status galat">{{ galat }}</div>{% endif %}
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required autofocus>
+    <p><button type="submit">Masuk</button> <a href="{{ url_for('halaman_absen') }}">Kembali ke absen</a></p>
+  </form>
+</main>
+</body>
+</html>
